@@ -1,0 +1,174 @@
+---
+title: "Diputados"
+---
+
+
+Esta web es un pequeño boceto de cómo se mantiene hasta ahora la votación en el Congreso de la Nación respecto del DNU 70/23 enviado por el Poder Ejecutivo Nacional
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE, message = FALSE, warning = FALSE, error = FALSE)
+```
+
+### Cámara de Diputados dividida POR BLOQUE
+```{r}
+# install.packages("plyr")
+# install.packages("ggthemes")
+# install.packages("plotly")
+# install.packages("readr")
+# install.packages("readxl")
+# install.packages("dplyr")
+# install.packages("ggplot2")
+# install.packages("geofacet")
+# install.packages("data.table")
+# install.packages("highcharter")
+# install.packages("scales")
+# install.packages("paletteer")
+# install.packages("gganimate")
+# install.packages("kableExtra")
+
+library(tidyverse)
+library(plyr)
+library(ggparliament)
+library(readxl)
+library(ggthemes)
+library(plotly)
+library(readr)
+library(dplyr)
+library(ggplot2)
+library(geofacet)
+library(data.table)
+library(highcharter)
+library(scales)
+library(paletteer)
+library(gganimate)
+library(kableExtra)
+
+diputados_nomina_s <- read_excel("C:/Users/fefen/OneDrive/Documentos/RSTUDIO/data/DIPUTADOS/diputados_nomina_s.xlsx")
+
+colnames(diputados_nomina_s)[1] <- "Distrito"
+colnames(diputados_nomina_s)[2] <- "Nombre"
+colnames(diputados_nomina_s)[3] <- "Apellido"
+colnames(diputados_nomina_s)[4] <- "party_long" 
+
+#Columna seats
+
+diputados_nomina_s <- diputados_nomina_s %>% mutate(
+     seats = case_when(
+       party_long == "Unión por la Patria"        ~ "1",
+       party_long == "La Libertad Avanza"        ~ "1",
+       party_long == "Buenos Aires Libre"        ~ "1",
+       party_long == "PRO"        ~ "1",
+       party_long == "La Unión Mendocina"        ~ "1",
+       party_long == "CREO"        ~ "1",
+       party_long == "Avanza Libertad"        ~ "1",
+       party_long == "Unión Cívica Radical"        ~ "1",
+       party_long == "Hacemos Coalición Federal"        ~ "1",
+       party_long == "Innovación Federal"        ~ "1",
+       party_long == "Frente de Izquierda - PTS"        ~ "1",
+       party_long == "Frente de Izquierda - PO"        ~ "1",
+       party_long == "Producción y Trabajo"        ~ "1",
+       party_long == "Por Santa Cruz"        ~ "1",
+       party_long == "Independencia"        ~ "1",
+       ))
+
+diputados_nomina_s$seats <- as.double(diputados_nomina_s$seats)
+
+
+#Columna colour
+
+diputados_nomina_s <- diputados_nomina_s %>% mutate(
+     colour = case_when(
+       party_long == "Unión por la Patria"        ~ "#1C60FF",
+       party_long == "La Libertad Avanza"        ~ "#9143a8",
+       party_long == "Buenos Aires Libre"        ~ "#630080",
+       party_long == "PRO"        ~ "#ffec2d",
+       party_long == "La Unión Mendocina"        ~ "#581845",
+       party_long == "CREO"        ~ "#a88c43",
+       party_long == "Avanza Libertad"        ~ "#a58fd6",
+       party_long == "Unión Cívica Radical"        ~ "#C70039",
+       party_long == "Hacemos Coalición Federal"        ~ "#3adf8a",
+       party_long == "Innovación Federal"        ~ "#2e1093",
+       party_long == "Frente de Izquierda - PTS"        ~ "#FF0000",
+       party_long == "Frente de Izquierda - PO"        ~ "#ff4747",
+       party_long == "Producción y Trabajo"        ~ "#ff8221",
+       party_long == "Por Santa Cruz"        ~ "#150a3e",
+       party_long == "Independencia"        ~ "#3F6BA3",
+       ))
+
+#Creamos la columna orden para manifestar el orden en que deberá aparecer en el gráfico
+
+diputados_nomina_s <- diputados_nomina_s %>% mutate(
+     orden = case_when(
+       party_long == "Unión por la Patria"        ~ "1",
+       party_long == "La Libertad Avanza"        ~ "2",
+       party_long == "Buenos Aires Libre"        ~ "3",
+       party_long == "PRO"        ~ "4",
+       party_long == "La Unión Mendocina"        ~ "5",
+       party_long == "CREO"        ~ "6",
+       party_long == "Avanza Libertad"        ~ "7",
+       party_long == "Unión Cívica Radical"        ~ "8",
+       party_long == "Hacemos Coalición Federal"        ~ "9",
+       party_long == "Innovación Federal"        ~ "10",
+       party_long == "Frente de Izquierda - PTS"        ~ "11",
+       party_long == "Frente de Izquierda - PO"        ~ "12",
+       party_long == "Producción y Trabajo"        ~ "13",
+       party_long == "Por Santa Cruz"        ~ "14",
+       party_long == "Independencia"        ~ "15",
+       ))
+
+diputados_nomina_s$orden <- as.double(diputados_nomina_s$orden)
+
+# Ordenamos los niveles del dataset para que se replique en el gráfico
+
+diputados_nomina_s$party_long <- factor(as.character(diputados_nomina_s$party_long), levels=c("Unión por la Patria", "La Libertad Avanza", "Buenos Aires Libre", "PRO", "La Unión Mendocina", "CREO","Avanza Libertad", "Unión Cívica Radical", "Hacemos Coalición Federal","Innovación Federal", "Frente de Izquierda - PTS", "Frente de Izquierda - PO","Producción y Trabajo", "Por Santa Cruz", "Independencia"), labels = c("Unión por la Patria", "La Libertad Avanza", "Buenos Aires Libre", "PRO", "La Unión Mendocina", "CREO","Avanza Libertad", "Unión Cívica Radical", "Hacemos Coalición Federal","Innovación Federal", "Frente de Izquierda - PTS", "Frente de Izquierda - PO","Producción y Trabajo", "Por Santa Cruz", "Independencia"))
+
+diputados_nomina_gral <- ggparliament::parliament_data(diputados_nomina_s, #datos 
+                                                       type = "semicircle", # forma del hemiciclo
+                                                       parl_rows =8, # cantidad de filas
+                                                       party_seats = diputados_nomina_s$seats, # número de bancas 
+                                                       plot_order = diputados_nomina_s$orden) %>% #orden de partidos en hemiciclo
+  mutate(colour = as.character(colour)) %>% # vector de texto para codigo HEX de colores asignados previamente
+  as_tibble()
+
+grafico_diputados_por_bloque_omnibus <- diputados_nomina_gral %>% as_tibble() %>% 
+  ggplot(aes(x, y, color = party_long, text = paste0("Nombre: ", Nombre, "<br>Apellido: ", Apellido, "\n", "Distrito: ", Distrito, "\n", "Bloque: ", party_long , "\n", "Voto: ", voto_ley_omnibus))) +
+  geom_parliament_seats(size = 8) + # tamaño de bancas (puntos)
+  draw_majoritythreshold(n = 128, label = F, type = "semicircle", linesize = 0.5) + # dibuja el limite de mayoría 
+  scale_y_continuous(labels = scales::percent) +
+  scale_colour_manual(values = diputados_nomina_gral$colour, #asigno colores 
+                      limits = diputados_nomina_gral$party_long)  +
+
+  labs(title = "Honorable Cámara de Diputados de la Nación y su apoyo a la Ley Ómnibus",
+       subtitle = "por bloque",
+       x = "",
+       y = "",
+       caption = "Fuente: Cámara de Diputados de la Nación",
+       colour = NULL) +
+  theme_minimal() +
+  theme(panel.grid = element_blank(), 
+        axis.text = element_blank(),
+        legend.text = element_text(size = 10),
+        legend.position = c("bottom")
+        )
+grafico_diputados_por_bloque_omnibus
+
+## Creamos el ggplotly ##
+
+grafico_diputados_por_bloque_plotly_omnibus <- ggplotly(grafico_diputados_por_bloque_omnibus, tooltip = "text")%>%
+  layout(title = list(text = paste0('Honorable Cámara de Diputados de la Nación y su apoyo a la Ley Ómnibus',
+                                    '<br>',
+                                    '<sup>',
+                                    'por bloque',
+                                    '</sup>')),
+         legend = list(orientation = "h", x = 0, y = -0.03), 
+                                           annotations = list(x = 1, 
+                                                              y = -0.001,
+                                                              text = "Fuente: Cámara de Diputados de la Nación",
+                                                              showarrow = F,
+                                                              xref='paper', yref='paper',
+                                                              xanchor='right', yanchor='auto',
+                                                              xshift=0, yshift=0,
+                                                              font=list(size=12, color="black")))
+grafico_diputados_por_bloque_plotly_omnibus
+```

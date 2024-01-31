@@ -1,0 +1,13 @@
+name: "poroteo-dnu-omnibus"
+output_dir: "."
+navbar:
+  title: "Poroteo DNU"
+  left:
+    - text: "Diputados"
+      href: index.html
+    - text: "Senado"
+      href: about.html
+output:
+  html_document:
+    theme: cerulean
+    highlight: textmate
