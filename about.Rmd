@@ -39,7 +39,7 @@ senado_nomina <- senado_nomina %>% mutate(
      seats = case_when(
        party_long == "Unidad Ciudadana"        ~ "1",
        party_long == "Frente Nacional y Popular"        ~ "1",
-       party_long == "Frente Renovador de la Concordia Social"        ~ "1",
+       party_long == "Frente Renovador de la Concordia"        ~ "1",
        party_long == "Juntos Somos Río Negro"        ~ "1",
        party_long == "Unidad Federal"        ~ "1",
         party_long == "Por Santa Cruz"~ "1",
@@ -57,7 +57,7 @@ senado_nomina <- senado_nomina %>% mutate(
      colour = case_when(
        party_long == "Unidad Ciudadana"        ~ "#1c60ff",
        party_long == "Frente Nacional y Popular"        ~ "#4FA4FF",
-       party_long == "Frente Renovador de la Concordia Social"        ~ "#A9D3FF",
+       party_long == "Frente Renovador de la Concordia"        ~ "#A9D3FF",
        party_long == "Juntos Somos Río Negro"        ~ "#42ED3D",
        party_long == "Unidad Federal"        ~ "#2E1093",
         party_long == "Por Santa Cruz"~ "#150A3E",
@@ -85,7 +85,7 @@ senado_nomina <- senado_nomina %>% mutate(
 
 senado_nomina$orden <- as.double(senado_nomina$orden)
 
-senado_nomina$party_long <- factor(as.character(senado_nomina$party_long), levels=c("Unidad Ciudadana","Frente Nacional y Popular","Frente Renovador de la Concordia Social","Juntos Somos Río Negro","Unidad Federal","Por Santa Cruz","Unión Cívica Radical","Partido por la Justicia Social","Frente PRO","Cambio Federal","La Libertad Avanza"), labels = c("Unidad Ciudadana","Frente Nacional y Popular","Frente Renovador de la Concordia Social","Juntos Somos Río Negro","Unidad Federal","Por Santa Cruz","Unión Cívica Radical","Partido por la Justicia Social","Frente PRO","Cambio Federal","La Libertad Avanza"))
+senado_nomina$party_long <- factor(as.character(senado_nomina$party_long), levels=c("Unidad Ciudadana","Frente Nacional y Popular","Frente Renovador de la Concordia","Juntos Somos Río Negro","Unidad Federal","Por Santa Cruz","Unión Cívica Radical","Partido por la Justicia Social","Frente PRO","Cambio Federal","La Libertad Avanza"), labels = c("Unidad Ciudadana","Frente Nacional y Popular","Frente Renovador de la Concordia","Juntos Somos Río Negro","Unidad Federal","Por Santa Cruz","Unión Cívica Radical","Partido por la Justicia Social","Frente PRO","Cambio Federal","La Libertad Avanza"))
 
 senadores_por_bloque<- ggparliament::parliament_data(senado_nomina, #datos 
                                                        type = "semicircle", # forma del hemiciclo
@@ -122,7 +122,7 @@ grafico_senado_por_bloque_plotly <- ggplotly(grafico_senado_por_bloque, tooltip 
                                     '<sup>',
                                     'por bloque',
                                     '</sup>')),
-         legend = list(orientation = "v", x = 0, y = 0.03), 
+         legend = list(orientation = "h", x = 0, y = 0.03), 
                                            annotations = list(x = 1, 
                                                               y = -0.001,
                                                               text = "Fuente: Cámara de Senadores de la Nación",
@@ -224,7 +224,7 @@ grafico_senado_por_voto_plotly <- ggplotly(grafico_senado_por_voto, tooltip = "t
                                     '<sup>',
                                     'por voto',
                                     '</sup>')),
-         legend = list(orientation = "v", x = 0, y = 0.03, 
+         legend = list(orientation = "h", x = 0, y = 0.02, 
                                            annotations = list(x = 1, 
                                                               y = -0.001,
                                                               text = "Fuente: Cámara de Senadores de la Nación",
@@ -232,7 +232,7 @@ grafico_senado_por_voto_plotly <- ggplotly(grafico_senado_por_voto, tooltip = "t
                                                               xref='paper', yref='paper',
                                                               xanchor='right', yanchor='auto',
                                                               xshift=0, yshift=0,
-                                                              font=list(size=12, color="black")))
+                                                              font=list(size=12, color="black"))))
 grafico_senado_por_voto_plotly
 ```
 
