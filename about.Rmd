@@ -2,13 +2,30 @@
 title: "Senado"
 ---
 
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE, message = FALSE, warning = FALSE, error = FALSE)
+```
+
 ### Cámara de Senadores dividida POR BLOQUE
 
 ```{r, echo=FALSE}
 
-knitr::opts_chunk$set(echo = FALSE)
-
+library(tidyverse)
+library(plyr)
 library(ggparliament)
+library(readxl)
+library(ggthemes)
+library(plotly)
+library(readr)
+library(dplyr)
+library(ggplot2)
+library(geofacet)
+library(data.table)
+library(highcharter)
+library(scales)
+library(paletteer)
+library(gganimate)
+library(kableExtra)
 senado_nomina <- read_excel("C:/Users/fefen/OneDrive/Documentos/RSTUDIO/data/DIPUTADOS/senado_nomina.xlsx")
 
 #NOMBRES DE COLUMNAS
@@ -55,7 +72,7 @@ senado_nomina <- senado_nomina %>% mutate(
      orden = case_when(
       party_long == "Unidad Ciudadana"        ~ "1",
        party_long == "Frente Nacional y Popular"        ~ "2",
-       party_long == "Frente Renovador de la Concordia Social"        ~ "3",
+       party_long == "Frente Renovador de la Concordia"        ~ "3",
        party_long == "Juntos Somos Río Negro"        ~ "4",
         party_long == "Unidad Federal"        ~ "5",
        party_long == "Por Santa Cruz"        ~ "6",
