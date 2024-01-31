@@ -171,4 +171,134 @@ grafico_diputados_por_bloque_plotly_omnibus <- ggplotly(grafico_diputados_por_bl
                                                               xshift=0, yshift=0,
                                                               font=list(size=12, color="black")))
 grafico_diputados_por_bloque_plotly_omnibus
+
 ```
+
+###Cámara de Diputados dividida POR VOTO
+
+```{r}
+#Columna seats
+
+diputados_nomina_s <- read_excel("C:/Users/fefen/OneDrive/Documentos/RSTUDIO/data/DIPUTADOS/diputados_nomina_s.xlsx")
+
+colnames(diputados_nomina_s)[1] <- "Distrito"
+colnames(diputados_nomina_s)[2] <- "Nombre"
+colnames(diputados_nomina_s)[3] <- "Apellido"
+colnames(diputados_nomina_s)[4] <- "party_long"
+
+diputados_nomina_s <- diputados_nomina_s %>% mutate(
+     seats = case_when(
+       voto_ley_omnibus == "A favor"        ~ "1",
+       voto_ley_omnibus == "Posible a favor"        ~ "1",
+       voto_ley_omnibus == "En negociación"        ~ "1",
+       voto_ley_omnibus == "Indefinido"        ~ "1",
+       voto_ley_omnibus == "Posible en contra"        ~ "1",
+       voto_ley_omnibus == "En contra"        ~ "1",
+       ))
+
+diputados_nomina_s$seats <- as.double(diputados_nomina_s$seats)
+
+#Columna colour
+
+diputados_nomina_s <- diputados_nomina_s %>% mutate(
+     colour = case_when(
+       voto_ley_omnibus == "A favor"        ~ "#90db7d",
+       voto_ley_omnibus == "Posible a favor"        ~ "#c4ffb5",
+       voto_ley_omnibus == "En negociación"        ~ "#b5c4ff",
+       voto_ley_omnibus == "Indefinido"        ~ "#a1a1a1",
+       voto_ley_omnibus== "Posible en contra"        ~ "#f5978f",
+       voto_ley_omnibus == "En contra"        ~ "#f95d50",
+       ))
+
+#Creamos la columna orden para manifestar el orden en que deberá aparecer en el gráfico
+
+diputados_nomina_s <- diputados_nomina_s %>% mutate(
+     orden = case_when(
+       voto_ley_omnibus == "A favor"        ~ "1",
+       voto_ley_omnibus == "Posible a favor"        ~ "2",
+       voto_ley_omnibus == "En negociación"        ~ "3",
+       voto_ley_omnibus == "Indefinido"        ~ "4",
+       voto_ley_omnibus == "Posible en contra"        ~ "5",
+       voto_ley_omnibus== "En contra"        ~ "6",
+       ))
+
+diputados_nomina_s$orden <- as.double(diputados_nomina_s$orden)
+
+
+# Ordenamos los niveles del dataset para que se replique en el gráfico
+
+diputados_nomina_s$voto_ley_omnibus <- factor(as.character(diputados_nomina_s$voto_ley_omnibus), levels=c("A favor", "Posible a favor", "En negociación", "Indefinido", "Posible en contra","En contra"), labels = c("A favor", "Posible a favor", "En negociación", "Indefinido", "Posible en contra","En contra"))
+
+diputados_nomina_gral_voto <- ggparliament::parliament_data(diputados_nomina_s, #datos 
+                                                       type = "semicircle", # forma del hemiciclo
+                                                       parl_rows =8, # cantidad de filas
+                                                       party_seats = diputados_nomina_s$seats, # número de bancas 
+                                                       plot_order = diputados_nomina_s$orden) %>% #orden de partidos en hemiciclo
+  mutate(colour = as.character(colour)) %>% # vector de texto para codigo HEX de colores asignados previamente
+  as_tibble()
+
+df_filtrado <- diputados_nomina_s %>%
+  filter(voto_ley_omnibus %in% c("A favor", "Posible a favor", "En negociación", "Indefinido", "Posible en contra"))
+
+grafico_diputados_por_voto_omnibus <- diputados_nomina_gral_voto %>% as_tibble() %>% 
+  ggplot(aes(x, y, color = voto_ley_omnibus, text = paste0("Nombre: ", Nombre, "<br>Apellido: ", Apellido, "\n", "Distrito: ", Distrito, "\n", "Bloque: ", party_long , "\n", "Voto: ", voto_ley_omnibus))) +
+  geom_parliament_seats(size = 8) + # tamaño de bancas (puntos)
+  draw_majoritythreshold(n = 128, label = F, type = "semicircle", linesize = 0.5) + # dibuja el limite de mayoría 
+  scale_y_continuous(labels = scales::percent) +
+  scale_colour_manual(values = diputados_nomina_gral_voto$colour, #asigno colores 
+                      limits = diputados_nomina_gral_voto$voto_ley_omnibus)  +
+
+  labs(title = "Honorable Cámara de Diputados de la Nación y su postura frente a la Ley Ómnibus",
+       subtitle = "por voto",
+       x = "",
+       y = "",
+       caption = "Fuente: Cámara de Diputados de la Nación",
+       colour = NULL) +
+  theme_minimal() +
+  theme(panel.grid = element_blank(), 
+        axis.text = element_blank(),
+        legend.text = element_text(size = 10),
+        legend.position = c("bottom")
+        )
+grafico_diputados_por_voto_omnibus
+
+## Creamos el ggplotly ##
+
+grafico_diputados_por_voto_plotly_omnibus <- ggplotly(grafico_diputados_por_voto_omnibus, tooltip = "text")%>%
+  layout(title = list(text = paste0('Honorable Cámara de Diputados de la Nación y su postura frente a la Ley Ómnibus',
+                                    '<br>',
+                                    '<sup>',
+                                    'por voto',
+                                    '</sup>')),
+         legend = list(orientation = "h", x = 0, y = -0.03), 
+                                           annotations = list(x = 1, 
+                                                              y = -0.001,
+                                                              text = "Fuente: Cámara de Diputados de la Nación",
+                                                              showarrow = F,
+                                                              xref='paper', yref='paper',
+                                                              xanchor='right', yanchor='auto',
+                                                              xshift=0, yshift=0,
+                                                              font=list(size=12, color="black")))
+grafico_diputados_por_voto_plotly_omnibus
+
+```
+
+## Tabla con información pública de los diputados que están a favor o indecisos de la Ley Ómnibus
+
+``` {r}
+
+# Display the entire dataframe as an HTML table with styling
+knitr::kable(
+  df_filtrado %>% select(-voto_al_dnu, -seats, -colour, -orden),
+  format = "html",
+  caption = "Filtered Data Frame"
+) %>%
+  kable_styling(
+    full_width = FALSE, # Allow the table to have a fixed width
+    bootstrap_options = c("striped", "hover", "condensed"), # Bootstrap table options
+    position = "center", # Center the table
+    latex_options = c("scale_down") # Scale down for LaTeX output
+  )
+```
+
+por Frankiturr0

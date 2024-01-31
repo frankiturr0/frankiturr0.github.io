@@ -1,7 +1,7 @@
 name: "poroteo-dnu-omnibus"
 output_dir: "."
 navbar:
-  title: "Poroteo DNU"
+  title: "Poroteo Ley Ómnibus"
   left:
     - text: "Diputados"
       href: index.html

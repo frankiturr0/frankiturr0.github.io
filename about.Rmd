@@ -79,12 +79,12 @@ senadores_por_bloque<- ggparliament::parliament_data(senado_nomina, #datos
   as_tibble()
 
 grafico_senado_por_bloque <- senadores_por_bloque %>% as_tibble() %>% 
-  ggplot(aes(x, y, color = party_long, text = paste0("Nombre: ", Nombre, "<br> Apellido: ", Apellido, "\n", "Distrito: ", Distrito, "\n", "Bloque: ", party_long, "\n", "Voto: ", voto_al_dnu))) +
+  ggplot(aes(x, y, color = party_long, text = paste0("Nombre: ", Nombre, "<br> Apellido: ", Apellido, "\n", "Distrito: ", Distrito, "\n", "Bloque: ", party_long, "\n", "Voto: ", voto_ley_omnibus))) +
   geom_parliament_seats(size = 8) + # tamaño de bancas (puntos)
   draw_majoritythreshold(n = 36, label = F, type = "semicircle", linesize = 0.5) + # dibuja el limite de mayoría 
   scale_colour_manual(values = senado_nomina$colour, #asigno colores 
                       limits = senado_nomina$party_long)  +
-  labs(title = "Honorable Senado de la Nación y su postura frente al DNU 70/23",
+  labs(title = "Honorable Senado de la Nación y su postura frente a la Ley Ómnibus",
        subtitle = "por bloque",
        x = "",
        y = "",
@@ -100,7 +100,7 @@ grafico_senado_por_bloque <- senadores_por_bloque %>% as_tibble() %>%
 grafico_senado_por_bloque
 
 grafico_senado_por_bloque_plotly <- ggplotly(grafico_senado_por_bloque, tooltip = "text")%>%
-  layout(title = list(text = paste0('Honorable Senado de la Nación y su postura frente al DNU 70/23',
+  layout(title = list(text = paste0('Honorable Senado de la Nación y su postura frente a la Ley Ómnibus',
                                     '<br>',
                                     '<sup>',
                                     'por bloque',
@@ -138,39 +138,39 @@ colnames(senado_nomina)[4] <- "party_long"
 
 senado_nomina <- senado_nomina %>% mutate(
      seats = case_when(
-       voto_al_dnu == "A favor"        ~ "1",
-       voto_al_dnu == "Posible a favor"        ~ "1",
-       voto_al_dnu == "En negociación"        ~ "1",
-       voto_al_dnu == "Indefinido"        ~ "1",
-      voto_al_dnu == "Posible en contra"        ~ "1",
-       voto_al_dnu == "En contra"        ~ "1",
+       voto_ley_omnibus == "A favor"        ~ "1",
+       voto_ley_omnibus == "Posible a favor"        ~ "1",
+       voto_ley_omnibus == "En negociación"        ~ "1",
+       voto_ley_omnibus == "Indefinido"        ~ "1",
+      voto_ley_omnibus == "Posible en contra"        ~ "1",
+       voto_ley_omnibus == "En contra"        ~ "1",
        ))
 
 senado_nomina$seats <- as.double(senado_nomina$seats)
 
 senado_nomina <- senado_nomina %>% mutate(
      colour = case_when(
-       voto_al_dnu == "A favor"        ~ "#90DB7D",
-       voto_al_dnu == "Posible a favor"        ~ "#C4FFB5",
-       voto_al_dnu == "En negociación"        ~ "#B5C4FF",
-       voto_al_dnu == "Indefinido"        ~ "#A1A1A1",
-      voto_al_dnu == "Posible en contra"        ~ "#F5978F",
-       voto_al_dnu == "En contra"        ~ "#F95D50",
+       voto_ley_omnibus == "A favor"        ~ "#90DB7D",
+       voto_ley_omnibus == "Posible a favor"        ~ "#C4FFB5",
+       voto_ley_omnibus == "En negociación"        ~ "#B5C4FF",
+       voto_ley_omnibus == "Indefinido"        ~ "#A1A1A1",
+      voto_ley_omnibus == "Posible en contra"        ~ "#F5978F",
+       voto_ley_omnibus == "En contra"        ~ "#F95D50",
        ))
 
 senado_nomina <- senado_nomina %>% mutate(
      orden = case_when(
-      voto_al_dnu == "A favor"        ~ "1",
-       voto_al_dnu == "Posible a favor"        ~ "2",
-       voto_al_dnu == "En negociación"        ~ "3",
-       voto_al_dnu == "Indefinido"        ~ "4",
-      voto_al_dnu == "Posible en contra"        ~ "5",
-       voto_al_dnu == "En contra"        ~ "6",
+      voto_ley_omnibus== "A favor"        ~ "1",
+       voto_ley_omnibus == "Posible a favor"        ~ "2",
+       voto_ley_omnibus == "En negociación"        ~ "3",
+       voto_ley_omnibus == "Indefinido"        ~ "4",
+      voto_ley_omnibus == "Posible en contra"        ~ "5",
+       voto_ley_omnibus == "En contra"        ~ "6",
        ))
 
 senado_nomina$orden <- as.double(senado_nomina$orden)
 
-senado_nomina$voto_al_dnu <- factor(as.character(senado_nomina$voto_al_dnu), levels=c("A favor", "Posible a favor", "En negociación", "Indefinido", "Posible en contra", "En contra"), labels = c("A favor", "Posible a favor", "En negociación", "Indefinido", "Posible en contra", "En contra"))
+senado_nomina$voto_ley_omnibus <- factor(as.character(senado_nomina$voto_ley_omnibus), levels=c("A favor", "Posible a favor", "En negociación", "Indefinido", "Posible en contra", "En contra"), labels = c("A favor", "Posible a favor", "En negociación", "Indefinido", "Posible en contra", "En contra"))
 
 senadores_por_voto<- ggparliament::parliament_data(senado_nomina, #datos 
                                                        type = "semicircle", # forma del hemiciclo
@@ -181,13 +181,13 @@ senadores_por_voto<- ggparliament::parliament_data(senado_nomina, #datos
   as_tibble()
 
 grafico_senado_por_voto <- senadores_por_voto %>% as_tibble() %>% 
-  ggplot(aes(x, y, color = voto_al_dnu, text = paste0("Nombre: ", Nombre, "<br>Apellido: ", Apellido, "\n", "Distrito: ", Distrito, "\n", "Bloque: ", party_long , "\n", "Voto: ", voto_al_dnu))) +
+  ggplot(aes(x, y, color = voto_ley_omnibus, text = paste0("Nombre: ", Nombre, "<br>Apellido: ", Apellido, "\n", "Distrito: ", Distrito, "\n", "Bloque: ", party_long , "\n", "Voto: ", voto_ley_omnibus))) +
   geom_parliament_seats(size = 8) +
   draw_majoritythreshold(n = 128, label = F, type = "semicircle", linesize = 0.5) +
   scale_y_continuous(labels = scales::percent) +
   scale_colour_manual(values = senado_nomina$colour, # Utiliza la columna de colores
-                      limits = senado_nomina$voto_al_dnu) +
-  labs(title = "Honorable Senado de la Nación y su postura frente al DNU 70/23",
+                      limits = senado_nomina$voto_ley_omnibus) +
+  labs(title = "Honorable Senado de la Nación y su postura frente a la Ley Ómnibus",
        subtitle = "por voto",
        x = "",
        y = "",
@@ -202,7 +202,7 @@ grafico_senado_por_voto <- senadores_por_voto %>% as_tibble() %>%
 grafico_senado_por_voto
 
 grafico_senado_por_voto_plotly <- ggplotly(grafico_senado_por_voto, tooltip = "text")%>%
-  layout(title = list(text = paste0('Honorable Senado de la Nación y su postura frente al DNU 70/23',
+  layout(title = list(text = paste0('Honorable Senado de la Nación y su postura frente a la ley Ómnibus',
                                     '<br>',
                                     '<sup>',
                                     'por voto',
@@ -216,7 +216,7 @@ grafico_senado_por_voto_plotly <- ggplotly(grafico_senado_por_voto, tooltip = "t
                                                               xanchor='right', yanchor='auto',
                                                               xshift=0, yshift=0,
                                                               font=list(size=12, color="black")))
-grafico_senado_por_voto_plotly 
+grafico_senado_por_voto_plotly
 ```
 
 por Frankiturr0
