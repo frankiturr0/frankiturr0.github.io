@@ -133,7 +133,7 @@ diputados_nomina_gral <- ggparliament::parliament_data(diputados_nomina_s, #dato
 
 grafico_diputados_por_bloque_omnibus <- diputados_nomina_gral %>% as_tibble() %>% 
   ggplot(aes(x, y, color = party_long, text = paste0("Nombre: ", Nombre, "<br>Apellido: ", Apellido, "\n", "Distrito: ", Distrito, "\n", "Bloque: ", party_long , "\n", "Voto: ", voto_ley_omnibus))) +
-  geom_parliament_seats(size = 8) + # tamaño de bancas (puntos)
+  geom_parliament_seats(size = 4) + # tamaño de bancas (puntos)
   draw_majoritythreshold(n = 128, label = F, type = "semicircle", linesize = 0.5) + # dibuja el limite de mayoría 
   scale_y_continuous(labels = scales::percent) +
   scale_colour_manual(values = diputados_nomina_gral$colour, #asigno colores 
@@ -242,7 +242,7 @@ df_filtrado <- diputados_nomina_s %>%
 
 grafico_diputados_por_voto_omnibus <- diputados_nomina_gral_voto %>% as_tibble() %>% 
   ggplot(aes(x, y, color = voto_ley_omnibus, text = paste0("Nombre: ", Nombre, "<br>Apellido: ", Apellido, "\n", "Distrito: ", Distrito, "\n", "Bloque: ", party_long , "\n", "Voto: ", voto_ley_omnibus))) +
-  geom_parliament_seats(size = 8) + # tamaño de bancas (puntos)
+  geom_parliament_seats(size = 4) + # tamaño de bancas (puntos)
   draw_majoritythreshold(n = 128, label = F, type = "semicircle", linesize = 0.5) + # dibuja el limite de mayoría 
   scale_y_continuous(labels = scales::percent) +
   scale_colour_manual(values = diputados_nomina_gral_voto$colour, #asigno colores 

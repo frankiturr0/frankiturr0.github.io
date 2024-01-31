@@ -97,7 +97,7 @@ senadores_por_bloque<- ggparliament::parliament_data(senado_nomina, #datos
 
 grafico_senado_por_bloque <- senadores_por_bloque %>% as_tibble() %>% 
   ggplot(aes(x, y, color = party_long, text = paste0("Nombre: ", Nombre, "<br> Apellido: ", Apellido, "\n", "Distrito: ", Distrito, "\n", "Bloque: ", party_long, "\n", "Voto: ", voto_ley_omnibus))) +
-  geom_parliament_seats(size = 8) + # tamaño de bancas (puntos)
+  geom_parliament_seats(size = 4) + # tamaño de bancas (puntos)
   draw_majoritythreshold(n = 36, label = F, type = "semicircle", linesize = 0.5) + # dibuja el limite de mayoría 
   scale_colour_manual(values = senado_nomina$colour, #asigno colores 
                       limits = senado_nomina$party_long)  +
@@ -122,9 +122,9 @@ grafico_senado_por_bloque_plotly <- ggplotly(grafico_senado_por_bloque, tooltip 
                                     '<sup>',
                                     'por bloque',
                                     '</sup>')),
-         legend = list(orientation = "v", x = 1, y = 1), 
-                                           annotations = list(x = 1.3, 
-                                                              y = -0.03,
+         legend = list(orientation = "v", x = 0, y = 0.03), 
+                                           annotations = list(x = 1, 
+                                                              y = -0.001,
                                                               text = "Fuente: Cámara de Senadores de la Nación",
                                                               showarrow = F,
                                                               xref='paper', yref='paper',
@@ -199,7 +199,7 @@ senadores_por_voto<- ggparliament::parliament_data(senado_nomina, #datos
 
 grafico_senado_por_voto <- senadores_por_voto %>% as_tibble() %>% 
   ggplot(aes(x, y, color = voto_ley_omnibus, text = paste0("Nombre: ", Nombre, "<br>Apellido: ", Apellido, "\n", "Distrito: ", Distrito, "\n", "Bloque: ", party_long , "\n", "Voto: ", voto_ley_omnibus))) +
-  geom_parliament_seats(size = 8) +
+  geom_parliament_seats(size = 4) +
   draw_majoritythreshold(n = 128, label = F, type = "semicircle", linesize = 0.5) +
   scale_y_continuous(labels = scales::percent) +
   scale_colour_manual(values = senado_nomina$colour, # Utiliza la columna de colores
@@ -224,9 +224,9 @@ grafico_senado_por_voto_plotly <- ggplotly(grafico_senado_por_voto, tooltip = "t
                                     '<sup>',
                                     'por voto',
                                     '</sup>')),
-         legend = list(orientation = "v", x = 1, y = 1), 
-                                           annotations = list(x = 1.3, 
-                                                              y = -0.03,
+         legend = list(orientation = "v", x = 0, y = 0.03, 
+                                           annotations = list(x = 1, 
+                                                              y = -0.001,
                                                               text = "Fuente: Cámara de Senadores de la Nación",
                                                               showarrow = F,
                                                               xref='paper', yref='paper',
