@@ -3,7 +3,7 @@ title: "Diputados"
 ---
 
 
-Esta web es un pequeño boceto de cómo se mantiene hasta ahora la votación en el Congreso de la Nación respecto del DNU 70/23 enviado por el Poder Ejecutivo Nacional
+Esta web es un pequeño boceto de cómo se mantiene hasta ahora la votación en el Congreso de la Nación respecto del proyecto de Ley Ómnibus presentado
 
 
 ```{r setup, include=FALSE}
@@ -163,7 +163,7 @@ grafico_diputados_por_bloque_plotly_omnibus <- ggplotly(grafico_diputados_por_bl
                                     '</sup>')),
          legend = list(orientation = "h", x = 0, y = -0.03), 
                                            annotations = list(x = 1, 
-                                                              y = -0.001,
+                                                              y = -0.04,
                                                               text = "Fuente: Cámara de Diputados de la Nación",
                                                               showarrow = F,
                                                               xref='paper', yref='paper',
@@ -272,7 +272,7 @@ grafico_diputados_por_voto_plotly_omnibus <- ggplotly(grafico_diputados_por_voto
                                     '</sup>')),
          legend = list(orientation = "h", x = 0, y = -0.03), 
                                            annotations = list(x = 1, 
-                                                              y = -0.001,
+                                                              y = -0.04,
                                                               text = "Fuente: Cámara de Diputados de la Nación",
                                                               showarrow = F,
                                                               xref='paper', yref='paper',
@@ -281,6 +281,24 @@ grafico_diputados_por_voto_plotly_omnibus <- ggplotly(grafico_diputados_por_voto
                                                               font=list(size=12, color="black")))
 grafico_diputados_por_voto_plotly_omnibus
 
+```
+
+## Tabla con información pública de los diputados que están a favor o indecisos de la Ley Ómnibus
+
+``` {r}
+
+# Display the entire dataframe as an HTML table with styling
+knitr::kable(
+  df_filtrado %>% select(-voto_al_dnu, -seats, -colour, -orden),
+  format = "html",
+  caption = "Filtered Data Frame"
+) %>%
+  kable_styling(
+    full_width = FALSE, # Allow the table to have a fixed width
+    bootstrap_options = c("striped", "hover", "condensed"), # Bootstrap table options
+    position = "center", # Center the table
+    latex_options = c("scale_down") # Scale down for LaTeX output
+  )
 ```
 
 ## Tabla con información pública de los diputados que están a favor o indecisos de la Ley Ómnibus
