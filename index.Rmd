@@ -300,7 +300,7 @@ grafico_resumen_votos_plotly <- plot_ly(resumen_votos, x = ~factor(voto_ley_omni
 grafico_resumen_votos_plotly
 ```
 
-## Tabla con información pública de los diputados que están a favor o indecisos de la Ley Ómnibus
+### Tabla con información pública de los diputados que están a favor o indecisos de la Ley Ómnibus
 
 ``` {r}
 

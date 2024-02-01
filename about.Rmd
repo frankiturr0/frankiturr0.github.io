@@ -238,23 +238,6 @@ grafico_senado_por_voto_plotly <- ggplotly(grafico_senado_por_voto, tooltip = "t
                                                               font=list(size=12, color="black")))
 grafico_senado_por_voto_plotly
 ``` 
-## Tabla con información pública de los senadores que están a favor o indecisos de la Ley Ómnibus
-
-``` {r}
-
-# Display the entire dataframe as an HTML table with styling
-knitr::kable(
-  df_filtrado %>% select(-voto_al_dnu, -seats, -colour, -orden),
-  format = "html",
-  caption = "Senadores a favor o indecisos"
-) %>%
-  kable_styling(
-    full_width = FALSE, # Allow the table to have a fixed width
-    bootstrap_options = c("striped", "hover", "condensed"), # Bootstrap table options
-    position = "center", # Center the table
-    latex_options = c("scale_down") # Scale down for LaTeX output
-  )
-```
 
 ### Cantidad de votos por tipo de voto
 ``` {r}
@@ -273,5 +256,24 @@ grafico_resumen_votos_plotly <- plot_ly(resumen_votos, x = ~factor(voto_ley_omni
 # Mostrar el gráfico interactivo de barras
 grafico_resumen_votos_plotly
 ```
+
+### Tabla con información pública de los senadores que están a favor o indecisos de la Ley Ómnibus
+
+``` {r}
+
+# Display the entire dataframe as an HTML table with styling
+knitr::kable(
+  df_filtrado %>% select(-voto_al_dnu, -seats, -colour, -orden),
+  format = "html",
+  caption = "Senadores a favor o indecisos"
+) %>%
+  kable_styling(
+    full_width = FALSE, # Allow the table to have a fixed width
+    bootstrap_options = c("striped", "hover", "condensed"), # Bootstrap table options
+    position = "center", # Center the table
+    latex_options = c("scale_down") # Scale down for LaTeX output
+  )
+```
+
 
 por Frankiturr0
