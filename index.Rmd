@@ -281,6 +281,39 @@ grafico_diputados_por_voto_plotly_omnibus <- ggplotly(grafico_diputados_por_voto
                                                               font=list(size=12, color="black")))
 grafico_diputados_por_voto_plotly_omnibus
 
+# Crear un resumen de la cantidad de votos por categoría
+resumen_votos <- diputados_nomina_s %>%
+  group_by(voto_ley_omnibus) %>%
+  summarise(cantidad = n(), colour = unique(colour))
+
+# Crear el gráfico interactivo de barras
+grafico_resumen_votos_plotly <- plot_ly(resumen_votos, x = ~factor(voto_ley_omnibus, levels=c("A favor", "Posible a favor", "En negociación", "Indefinido", "Posible en contra", "En contra")), y = ~cantidad, type = 'bar', marker = list(color = resumen_votos$colour)) %>%
+  layout(title = "Resumen de Votos de la Cámara de Diputados sobre la Ley Ómnibus",
+         xaxis = list(title = "Voto"),
+         yaxis = list(title = "Cantidad"),
+         showlegend = FALSE)
+
+# Mostrar el gráfico interactivo de barras
+grafico_resumen_votos_plotly
+
+```
+
+### Cantidad de votos por tipo de voto
+``` {r}
+# Crear un resumen de la cantidad de votos por categoría
+resumen_votos <- diputados_nomina_s %>%
+  group_by(voto_ley_omnibus) %>%
+  summarise(cantidad = n(), colour = unique(colour))
+
+# Crear el gráfico interactivo de barras
+grafico_resumen_votos_plotly <- plot_ly(resumen_votos, x = ~factor(voto_ley_omnibus, levels=c("A favor", "Posible a favor", "En negociación", "Indefinido", "Posible en contra", "En contra")), y = ~cantidad, type = 'bar', marker = list(color = resumen_votos$colour)) %>%
+  layout(title = "Resumen de Votos de la Cámara de Diputados sobre la Ley Ómnibus",
+         xaxis = list(title = "Voto"),
+         yaxis = list(title = "Cantidad"),
+         showlegend = FALSE)
+
+# Mostrar el gráfico interactivo de barras
+grafico_resumen_votos_plotly
 ```
 
 ## Tabla con información pública de los diputados que están a favor o indecisos de la Ley Ómnibus
@@ -291,25 +324,7 @@ grafico_diputados_por_voto_plotly_omnibus
 knitr::kable(
   df_filtrado %>% select(-voto_al_dnu, -seats, -colour, -orden),
   format = "html",
-  caption = "Filtered Data Frame"
-) %>%
-  kable_styling(
-    full_width = FALSE, # Allow the table to have a fixed width
-    bootstrap_options = c("striped", "hover", "condensed"), # Bootstrap table options
-    position = "center", # Center the table
-    latex_options = c("scale_down") # Scale down for LaTeX output
-  )
-```
-
-## Tabla con información pública de los diputados que están a favor o indecisos de la Ley Ómnibus
-
-``` {r}
-
-# Display the entire dataframe as an HTML table with styling
-knitr::kable(
-  df_filtrado %>% select(-voto_al_dnu, -seats, -colour, -orden),
-  format = "html",
-  caption = "Filtered Data Frame"
+  caption = "Diputados a favor o indecisos"
 ) %>%
   kable_styling(
     full_width = FALSE, # Allow the table to have a fixed width
