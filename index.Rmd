@@ -174,7 +174,7 @@ grafico_diputados_por_bloque_plotly_omnibus
 
 ```
 
-###Cámara de Diputados dividida POR VOTO
+### Cámara de Diputados dividida POR VOTO
 
 ```{r}
 #Columna seats
