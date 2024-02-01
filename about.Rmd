@@ -197,6 +197,9 @@ senadores_por_voto<- ggparliament::parliament_data(senado_nomina, #datos
   mutate(colour = as.character(colour)) %>% # vector de texto para codigo HEX de colores asignados previamente
   as_tibble()
 
+df_filtrado <- senado_nomina %>%
+  filter(voto_ley_omnibus %in% c("A favor", "Posible a favor", "En negociación", "Indefinido", "Posible en contra"))
+
 grafico_senado_por_voto <- senadores_por_voto %>% as_tibble() %>% 
   ggplot(aes(x, y, color = voto_ley_omnibus, text = paste0("Nombre: ", Nombre, "<br>Apellido: ", Apellido, "\n", "Distrito: ", Distrito, "\n", "Bloque: ", party_long , "\n", "Voto: ", voto_ley_omnibus))) +
   geom_parliament_seats(size = 4) +
