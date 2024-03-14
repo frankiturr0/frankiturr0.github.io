@@ -261,34 +261,36 @@ grafico_resumen_votos_plotly
 ```
 
 ``` {r}
-# Crear un resumen de la cantidad de votos por categoría
-resumen_votos <- senado_nomina %>%
-  group_by(party_long) %>%
-  summarise(cantidad = n(), 
-            color = unique(colour),
-            votos_favor = sum(voto_al_dnu == "A favor"),
-            votos_contra = sum(voto_al_dnu == "En contra"),
-            votos_posible_favor = sum(voto_al_dnu == "Posible a favor"),
-            votos_posible_contra = sum(voto_al_dnu == "Posible en contra"))
 
-# Crear el gráfico interactivo de barras
-grafico_resumen_votos_plotly <- plot_ly(resumen_votos, 
-                                        x = ~factor(party_long, levels=c("Unidad Ciudadana","Frente Nacional y Popular","Frente Renovador de la Concordia Social","Juntos Somos Río Negro","Unidad Federal","Por Santa Cruz","Unión Cívica Radical","Partido por la Justicia Social","Frente PRO","Cambio Federal","La Libertad Avanza","Comunidad Neuquén")), 
-                                        y = ~cantidad, 
-                                        type = 'bar', 
-                                        hoverinfo = "text",
-                                        text = ~paste("A favor:", votos_favor, "<br>",
-                                                      "En contra:", votos_contra, "<br>",
-                                                      "Posible a favor:", votos_posible_favor, "<br>",
-                                                      "Posible en contra:", votos_posible_contra, "<br>"),
-                                        marker = list(color = resumen_votos$color)) %>%
-  layout(title = "Resumen de Votos del Senado sobre el DNU 70/23",
-         xaxis = list(title = "Bloque"),
-         yaxis = list(title = "Cantidad de votos"),
-         showlegend = FALSE)
 
-# Mostrar el gráfico interactivo de barras
-grafico_resumen_votos_plotly
+library(viridis)
+
+# Crear un vector de colores que se correspondan con las categorías de voto_al_dnu
+colores <- c("#F95D50", "#F5978F", "#C4FFB5", "#90DB7D")
+
+# Agrupar y contar los votos por bloque y tipo de voto
+votos_por_bloque <- senado_nomina %>%
+  filter(party_long %in% c("Unidad Ciudadana", "Frente Nacional y Popular", "Frente Renovador de la Concordia Social", "Juntos Somos Río Negro", "Unidad Federal", "Por Santa Cruz", "Unión Cívica Radical", "Partido por la Justicia Social", "Frente PRO", "Cambio Federal", "La Libertad Avanza", "Comunidad Neuquén")) %>%
+  group_by(party_long, voto_al_dnu) %>%
+  summarise(count = n())
+
+# Crear el gráfico de barras apiladas con ggplot
+plot_votos_por_bloque <- ggplot(votos_por_bloque, aes(x = party_long, y = count, fill = voto_al_dnu, text = paste("Bloque:", party_long, "<br>", "Tipo de voto:", voto_al_dnu, "<br>", "Cantidad:", count))) +
+  geom_bar(stat = "identity") +
+  scale_fill_manual(values = colores) +  # Utilizar la paleta de colores definida
+  theme_minimal() +
+  labs(x = "Bloque",
+       y = "Cantidad de votos",
+       fill = "Tipo de voto",
+       title = "Cantidad de votos por bloque",
+       caption = "Fuente: Honorable Senado de la Nación") +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
+# Convertir el gráfico de ggplot a plotly
+plotly_plot <- ggplotly(plot_votos_por_bloque, tooltip = "text")
+
+# Mostrar el gráfico interactivo
+plotly_plot
 
 ```
 
