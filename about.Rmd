@@ -292,7 +292,7 @@ grafico_resumen_votos_plotly
 
 ```
 
-### Tabla con información pública de los senadores que están a favor o indecisos de la Ley Ómnibus
+### Tabla con información pública de los senadores que están a favor o indecisos del DNU 70/23
 
 ``` {r}
 
