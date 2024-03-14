@@ -266,12 +266,12 @@ grafico_resumen_votos_plotly <- plot_ly(resumen_votos,
                                         x = ~factor(party_long, levels=c("Unidad Ciudadana","Frente Nacional y Popular","Frente Renovador de la Concordia Social","Juntos Somos Río Negro","Unidad Federal","Por Santa Cruz","Unión Cívica Radical","Partido por la Justicia Social","Frente PRO","Cambio Federal","La Libertad Avanza","Comunidad Neuquén")), 
                                         y = ~cantidad, 
                                         type = 'bar', 
-                                        marker = list(color = resumen_votos$color),
-                                        hoverinfo = 'text',
+                                        hoverinfo = "text",
                                         text = ~paste("Votos a favor:", votos_favor, "<br>",
                                                       "Votos en contra:", votos_contra, "<br>",
                                                       "Posible a favor:", votos_posible_favor, "<br>",
-                                                      "Posible en contra:", votos_posible_contra, "<br>")) %>%
+                                                      "Posible en contra:", votos_posible_contra, "<br>"),
+                                        marker = list(color = resumen_votos$color)) %>%
   layout(title = "Resumen de Votos del Senado sobre el DNU 70/23",
          xaxis = list(title = "Bloque"),
          yaxis = list(title = "Cantidad de votos"),
@@ -279,8 +279,6 @@ grafico_resumen_votos_plotly <- plot_ly(resumen_votos,
 
 # Mostrar el gráfico interactivo de barras
 grafico_resumen_votos_plotly
-
-
 
 ```
 
