@@ -160,7 +160,7 @@ senado_nomina <- senado_nomina %>% mutate(
      seats = case_when(
        voto_al_dnu == "En contra"        ~ "1",
        voto_al_dnu == "Posible en contra"        ~ "1",
-       voto_al_dnu == "En negociación"        ~ "1",
+       voto_al_dnu == "Abstención"        ~ "1",
        voto_al_dnu == "Indefinido"        ~ "1",
       voto_al_dnu == "Posible a favor"        ~ "1",
        voto_al_dnu == "A favor"        ~ "1",
@@ -172,7 +172,7 @@ senado_nomina <- senado_nomina %>% mutate(
      colour = case_when(
        voto_al_dnu == "En contra"        ~ "#F95D50",
        voto_al_dnu == "Posible en contra"        ~ "#F5978F",
-       voto_al_dnu == "En negociación"        ~ "#B5C4FF",
+       voto_al_dnu == "Abstención"        ~ "#B5C4FF",
        voto_al_dnu == "Indefinido"        ~ "#A1A1A1",
       voto_al_dnu == "Posible a favor"        ~ "#C4FFB5",
        voto_al_dnu == "A favor"        ~ "#90DB7D",
@@ -182,7 +182,7 @@ senado_nomina <- senado_nomina %>% mutate(
      orden = case_when(
       voto_al_dnu== "En contra"        ~ "1",
        voto_al_dnu == "Posible en contra"        ~ "2",
-       voto_al_dnu == "En negociación"        ~ "3",
+       voto_al_dnu == "Abstención"        ~ "3",
        voto_al_dnu == "Indefinido"        ~ "4",
       voto_al_dnu == "Posible a favor"        ~ "5",
        voto_al_dnu == "A favor"        ~ "6",
@@ -190,7 +190,7 @@ senado_nomina <- senado_nomina %>% mutate(
 
 senado_nomina$orden <- as.double(senado_nomina$orden)
 
-senado_nomina$voto_al_dnu <- factor(as.character(senado_nomina$voto_al_dnu), levels=c("En contra", "Posible en contra", "En negociación", "Indefinido", "Posible a favor", "A favor"), labels = c("En contra", "Posible en contra", "En negociación", "Indefinido", "Posible a favor", "A favor"))
+senado_nomina$voto_al_dnu <- factor(as.character(senado_nomina$voto_al_dnu), levels=c("En contra", "Posible en contra", "Abstención", "Indefinido", "Posible a favor", "A favor"), labels = c("En contra", "Posible en contra", "Abstención", "Indefinido", "Posible a favor", "A favor"))
 
 senadores_por_voto<- ggparliament::parliament_data(senado_nomina, #datos 
                                                        type = "semicircle", # forma del hemiciclo
@@ -201,7 +201,7 @@ senadores_por_voto<- ggparliament::parliament_data(senado_nomina, #datos
   as_tibble()
 
 senadores_a_favor <- senado_nomina %>%
-  filter(voto_al_dnu %in% c("A favor", "Posible a favor", "En negociación", "Indefinido"))
+  filter(voto_al_dnu %in% c("A favor", "Posible a favor", "Abstención", "Indefinido"))
 
 grafico_senado_por_voto <- senadores_por_voto %>% as_tibble() %>% 
   ggplot(aes(x, y, color = voto_al_dnu, text = paste0("Nombre: ", Nombre, "<br>Apellido: ", Apellido, "\n", "Distrito: ", Distrito, "\n", "Bloque: ", party_long , "\n", "Voto: ", voto_al_dnu))) +
@@ -250,7 +250,7 @@ resumen_votos <- senado_nomina %>%
   summarise(cantidad = n(), colour = unique(colour))
 
 # Crear el gráfico interactivo de barras
-grafico_resumen_votos_plotly <- plot_ly(resumen_votos, x = ~factor(voto_al_dnu, levels=c("A favor", "Posible a favor", "En negociación", "Indefinido", "Posible en contra", "En contra")), y = ~cantidad, type = 'bar', marker = list(color = resumen_votos$colour)) %>%
+grafico_resumen_votos_plotly <- plot_ly(resumen_votos, x = ~factor(voto_al_dnu, levels=c("A favor", "Posible a favor", "Abstención", "Indefinido", "Posible en contra", "En contra")), y = ~cantidad, type = 'bar', marker = list(color = resumen_votos$colour)) %>%
   layout(title = "Resumen de Votos del Senado sobre el DNU 70/23",
          xaxis = list(title = "Voto"),
          yaxis = list(title = "Cantidad"),
@@ -266,7 +266,7 @@ grafico_resumen_votos_plotly
 library(viridis)
 
 # Crear un vector de colores que se correspondan con las categorías de voto_al_dnu
-colores <- c("#F95D50", "#F5978F", "#C4FFB5", "#90DB7D")
+colores <- c("#F95D50", "#F5978F", "#B5C4FF","#C4FFB5", "#90DB7D")
 
 # Agrupar y contar los votos por bloque y tipo de voto
 votos_por_bloque <- senado_nomina %>%
