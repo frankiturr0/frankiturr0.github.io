@@ -261,6 +261,16 @@ grafico_resumen_votos_plotly
 ```
 
 ``` {r}
+# Crear un resumen de la cantidad de votos por categoría
+resumen_votos <- senado_nomina %>%
+  group_by(party_long) %>%
+  summarise(cantidad = n(), 
+            color = unique(colour),
+            votos_favor = sum(voto_al_dnu == "A favor"),
+            votos_contra = sum(voto_al_dnu == "En contra"),
+            votos_posible_favor = sum(voto_al_dnu == "Posible a favor"),
+            votos_posible_contra = sum(voto_al_dnu == "Posible en contra"))
+
 # Crear el gráfico interactivo de barras
 grafico_resumen_votos_plotly <- plot_ly(resumen_votos, 
                                         x = ~factor(party_long, levels=c("Unidad Ciudadana","Frente Nacional y Popular","Frente Renovador de la Concordia Social","Juntos Somos Río Negro","Unidad Federal","Por Santa Cruz","Unión Cívica Radical","Partido por la Justicia Social","Frente PRO","Cambio Federal","La Libertad Avanza","Comunidad Neuquén")), 
